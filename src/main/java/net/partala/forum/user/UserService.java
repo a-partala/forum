@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.dto.RegistrationRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -17,6 +18,7 @@ public class UserService {
         this.repository = repository;
     }
 
+    @Transactional
     public void createUser(RegistrationRequest request) {
 
         UserRole role = UserRole.USER;
