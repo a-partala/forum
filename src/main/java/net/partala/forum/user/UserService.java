@@ -32,12 +32,12 @@ public class UserService {
         repository.save(entity);
     }
 
-    public Boolean isEmailAvailable(String email) {
+    public boolean isEmailAvailable(String email) {
 
         return repository.findByEmail(email).isEmpty();
     }
 
-    public Boolean isUsernameAvailable(String username) {
+    public boolean isUsernameAvailable(String username) {
 
         return repository.findByUsername(username).isEmpty();
     }
