@@ -1,12 +1,8 @@
 package net.partala.forum.user;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.annotation.EmailValidation;
 import net.partala.forum.auth.annotation.UsernameValidation;
-import net.partala.forum.user.dto.AvailabilityResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -2,9 +2,7 @@ package net.partala.forum.auth;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import net.partala.forum.auth.dto.LoginRequest;
-import net.partala.forum.auth.dto.RegistrationRequest;
-import net.partala.forum.auth.jwt.dto.JwtResponse;
+import net.partala.forum.auth.jwt.JwtResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

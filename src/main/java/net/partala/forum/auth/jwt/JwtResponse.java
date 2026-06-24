@@ -1,4 +1,4 @@
-package net.partala.forum.auth.jwt.dto;
+package net.partala.forum.auth.jwt;
 
 import java.time.Instant;
 

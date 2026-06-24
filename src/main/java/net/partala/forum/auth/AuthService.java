@@ -1,10 +1,8 @@
 package net.partala.forum.auth;
 
 import lombok.extern.slf4j.Slf4j;
-import net.partala.forum.auth.dto.LoginRequest;
-import net.partala.forum.auth.dto.RegistrationRequest;
 import net.partala.forum.auth.jwt.JwtService;
-import net.partala.forum.auth.jwt.dto.JwtResponse;
+import net.partala.forum.auth.jwt.JwtResponse;
 import net.partala.forum.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

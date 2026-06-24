@@ -1,4 +1,4 @@
-package net.partala.forum.exception.dto;
+package net.partala.forum.exception;
 
 import java.time.LocalDateTime;
 

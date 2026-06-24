@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.SecurityUser;
-import net.partala.forum.auth.jwt.dto.JwtResponse;
 import net.partala.forum.config.JwtProperties;
 import net.partala.forum.user.UserRole;
 import org.springframework.stereotype.Service;

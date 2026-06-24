@@ -1,4 +1,4 @@
-package net.partala.forum.auth.dto;
+package net.partala.forum.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
