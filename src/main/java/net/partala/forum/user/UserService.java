@@ -3,7 +3,6 @@ package net.partala.forum.user;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.RegistrationRequest;
 import net.partala.forum.exception.AlreadyExistsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +18,10 @@ public class UserService {
 
     @Transactional
     public void createUser(RegistrationRequest request) {
+
+        if(request == null) {
+            throw new IllegalArgumentException("Empty registration request");
+        }
 
         UserRole role = UserRole.USER;
 

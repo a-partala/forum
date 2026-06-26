@@ -17,6 +17,9 @@ public class SecurityUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        if(login.isBlank()) {
+            throw new UsernameNotFoundException("Blank login");
+        }
         return userRepository.findByUsernameOrEmail(login, login)
                 .map(SecurityUser::new)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));

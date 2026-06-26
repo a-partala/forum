@@ -11,21 +11,21 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class AuthService {
+class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
     private final PasswordEncoder encoder;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService, PasswordEncoder encoder) {
+    AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService, PasswordEncoder encoder) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userService = userService;
         this.encoder = encoder;
     }
 
-    public void register(RegistrationRequest request) {
+    void register(RegistrationRequest request) {
         userService.createUser(new RegistrationRequest(
                 request.username(),
                 request.email(),
@@ -33,7 +33,7 @@ public class AuthService {
         ));
     }
 
-    public JwtResponse login(LoginRequest request) {
+    JwtResponse login(LoginRequest request) {
         var authToken = new UsernamePasswordAuthenticationToken(
                 request.login(),
                 request.password());

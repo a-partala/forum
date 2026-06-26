@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,7 +69,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(exception = {
-            BadCredentialsException.class
+            BadCredentialsException.class,
+            UsernameNotFoundException.class
     })
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(Exception e) {
 

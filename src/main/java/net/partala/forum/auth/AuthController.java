@@ -24,7 +24,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid
                                          RegistrationRequest request) {
-        log.info("register called with {}:{}", request.username(), request.email());
+        log.info("register called for {}:{}", request.username(), request.email());
 
         authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -33,7 +33,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody @Valid
                                           LoginRequest request) {
-        log.info("login called with {}", request.login());
+        log.info("login called for \"{}\"", request.login());
 
         var response = authService.login(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);

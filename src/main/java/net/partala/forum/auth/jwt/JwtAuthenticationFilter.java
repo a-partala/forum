@@ -55,7 +55,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new BadCredentialsException("Invalid token purpose");
             }
 
-            String username = jwtService.extractUsername(tokenClaims);
+            var username = tokenClaims.getSubject();
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 var auth = new UsernamePasswordAuthenticationToken(
                         username,
