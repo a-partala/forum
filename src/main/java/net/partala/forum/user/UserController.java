@@ -33,7 +33,7 @@ public class UserController {
     public ResponseEntity<AvailabilityResponse> isEmailAvailable(@RequestBody @EmailValidation String email) {
 
         log.info("isEmailAvailable called with {}", email);
-        boolean isAvailable = userService.isUsernameAvailable(email);
+        boolean isAvailable = userService.isEmailAvailable(email);
         return ResponseEntity.status(HttpStatus.OK).body(new AvailabilityResponse(isAvailable));
     }
 }
