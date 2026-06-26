@@ -108,6 +108,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(exception = {
             IllegalStateException.class,
             IllegalArgumentException.class,
+            AlreadyExistsException.class,
             NoSuchElementException.class
     })
     public ResponseEntity<ErrorResponse> handleBusinessException(RuntimeException e) {

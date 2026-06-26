@@ -2,6 +2,7 @@ package net.partala.forum.user;
 
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.RegistrationRequest;
+import net.partala.forum.exception.AlreadyExistsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,11 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-    private final PasswordEncoder encoder;
     private final UserRepository repository;
 
-    public UserService(PasswordEncoder encoder, UserRepository repository) {
-        this.encoder = encoder;
+    public UserService(UserRepository repository) {
         this.repository = repository;
     }
 
@@ -25,10 +24,15 @@ public class UserService {
 
         if(!repository.existsBy()) {
             role = UserRole.ADMIN;
+        } else if(repository.findByUsernameOrEmail(request.username(), request.email()).isPresent()) {
+            throw new AlreadyExistsException("User with this username or email already exists");
         }
 
-        var encodedPassword = encoder.encode(request.password());
-        var entity = new UserEntity(request.username(), request.email(), encodedPassword, role);
+        var entity = new UserEntity(
+                request.username(),
+                request.email(),
+                request.password(),
+                role);
         repository.save(entity);
     }
 

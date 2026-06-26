@@ -26,7 +26,11 @@ public class AuthService {
     }
 
     public void register(RegistrationRequest request) {
-        userService.createUser(request);
+        userService.createUser(new RegistrationRequest(
+                request.username(),
+                request.email(),
+                encoder.encode(request.password())
+        ));
     }
 
     public JwtResponse login(LoginRequest request) {
