@@ -1,25 +1,21 @@
 package net.partala.forum.user;
 
-import jakarta.transaction.Transactional;
-import net.partala.forum.BaseIntegrationTest;
+import net.partala.forum.WebIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserControllerTest extends BaseIntegrationTest {
+class UserControllerTest extends WebIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ObjectMapper mapper;
-    @Autowired
-    private MockMvc mockMvc;
 
     @Test
     void isUsernameAvailable_ReturnTrue_WhenDoesntExist() throws Exception {

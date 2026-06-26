@@ -14,8 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -28,25 +27,22 @@ class UserServiceTest {
 
     @Test
     void createUser_SaveWithAdminRole_WhenUserFirst() {
-        var request = new RegistrationRequest("user", "user@email.com", "password");
         when(userRepository.existsBy()).thenReturn(false);
 
-        userService.createUser(request);
+        userService.createUser(RegistrationRequest.empty());
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository).save(captor.capture());
-
         var savedUser = captor.getValue();
         assertEquals(UserRole.ADMIN, savedUser.getRole());
     }
 
     @Test
     void createUser_SaveWithUserRole_WhenUserIsNotFirst() {
-        var request = new RegistrationRequest("user", "user@email.com", "password");
         when(userRepository.existsBy()).thenReturn(true);
         when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(Optional.empty());
 
-        userService.createUser(request);
+        userService.createUser(mock());
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository).save(captor.capture());
@@ -55,12 +51,18 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_ThrowAlreadyExists_WhenUsernameOrEmailExist() {
-        var request = new RegistrationRequest("user", "user@email.com", "password");
+    void createUser_ThrowIllegalArgumentException_WhenRequestIsNull() {
+        Executable executable = () -> userService.createUser(null);
+
+        assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    void createUser_ThrowAlreadyExistsException_WhenUsernameOrEmailExist() {
         when(userRepository.existsBy()).thenReturn(true);
         when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(Optional.of(new UserEntity()));
 
-        Executable executable = () -> userService.createUser(request);
+        Executable executable = () -> userService.createUser(mock());
 
         assertThrows(AlreadyExistsException.class, executable);
     }

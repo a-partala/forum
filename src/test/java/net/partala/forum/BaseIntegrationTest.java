@@ -5,11 +5,12 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 
+/**
+ * Brings up test database and cleans it before each test
+ */
 @SpringBootTest
-@AutoConfigureMockMvc
 @Import(TestcontainersConfig.class)
 public class BaseIntegrationTest {
 
@@ -17,7 +18,7 @@ public class BaseIntegrationTest {
     private EntityManagerFactory entityManagerFactory;
 
     @BeforeEach
-    public void truncateMappedObjects() {
+    protected void truncateMappedObjects() {
         entityManagerFactory
                 .unwrap(SessionFactoryImplementor.class)
                 .getSchemaManager()

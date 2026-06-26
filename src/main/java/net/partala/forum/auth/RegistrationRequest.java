@@ -16,4 +16,7 @@ public record RegistrationRequest (
         @Size(min = 8, max = 64)
         String password
 ){
+    public static RegistrationRequest empty() {
+        return new RegistrationRequest("", "", "");
+    }
 }
