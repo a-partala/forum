@@ -26,7 +26,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final AuthenticationEntryPoint authEntryPoint;
-    private static final String TOKEN_PREFIX = "Bearer ";
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     public JwtAuthenticationFilter(JwtService jwtService,
@@ -42,13 +41,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String rawToken = request.getHeader(AUTHORIZATION_HEADER);
 
-        if(rawToken == null || !rawToken.startsWith(TOKEN_PREFIX)) {
+        if(rawToken == null || !jwtService.startsWithTargetType(rawToken)) {
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            var token = trimPrefix(rawToken);
+            var token = jwtService.trimPrefix(rawToken);
             Claims tokenClaims = jwtService.parseAllClaims(token);
 
             if(jwtService.extractPurpose(tokenClaims) != TokenPurpose.ACCESS) {
@@ -77,9 +76,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String trimPrefix(String authHeader) {
-        return authHeader.substring(TOKEN_PREFIX.length());
     }
 }

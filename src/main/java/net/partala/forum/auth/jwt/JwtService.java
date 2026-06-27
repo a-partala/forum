@@ -23,8 +23,10 @@ import java.util.Set;
 @Service
 public class JwtService {
 
+    private static final String TOKEN_TYPE = "Bearer";
     private static final String ROLE_KEY = "role";
     private static final String PURPOSE_KEY = "purpose";
+
     private final JwtProperties properties;
     private final Clock clock;
 
@@ -47,7 +49,7 @@ public class JwtService {
                 .expiration(Date.from(expire))
                 .signWith(getSigningKey())
                 .compact();
-        return new JwtResponse(token, expire);
+        return new JwtResponse(token, TOKEN_TYPE, expire);
     }
 
     public Set<GrantedAuthority> extractAuthorities(Claims claims) {
@@ -70,5 +72,13 @@ public class JwtService {
     private SecretKey getSigningKey() {
         byte[] keyBytes = Base64.getDecoder().decode(properties.secret());
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public boolean startsWithTargetType(String authHeader) {
+        return authHeader.startsWith(TOKEN_TYPE);
+    }
+
+    public String trimPrefix(String authHeader) {
+        return authHeader.substring(TOKEN_TYPE.length() + 1);
     }
 }
