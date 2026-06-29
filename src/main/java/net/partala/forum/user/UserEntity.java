@@ -2,11 +2,12 @@ package net.partala.forum.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import org.hibernate.annotations.Generated;
+import org.hibernate.generator.EventType;
 
 import java.time.LocalDateTime;
 
 @Getter
-
 @Entity
 @Table(name = "users")
 public class UserEntity {

@@ -1,6 +1,6 @@
 package net.partala.forum.auth;
 
-import net.partala.forum.WebIntegrationTest;
+import net.partala.forum.BaseIntegrationTest;
 import net.partala.forum.auth.jwt.JwtResponse;
 import net.partala.forum.auth.jwt.JwtService;
 import net.partala.forum.user.UserEntity;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class AuthControllerTest extends WebIntegrationTest {
+class AuthControllerTest extends BaseIntegrationTest {
 
     private final RegistrationRequest registrationRequest = new RegistrationRequest("user", "user@gmail.com", "12345678");
     @Autowired

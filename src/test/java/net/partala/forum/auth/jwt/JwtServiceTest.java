@@ -1,7 +1,7 @@
 package net.partala.forum.auth.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
-import net.partala.forum.auth.SecurityUser;
+import net.partala.forum.auth.UserPrincipal;
 import net.partala.forum.config.JwtProperties;
 import net.partala.forum.user.UserEntity;
 import net.partala.forum.user.UserRole;
@@ -31,9 +31,9 @@ class JwtServiceTest {
                 new JwtProperties(secret, 10),
                 clock);
         var userEntity = new UserEntity("user", "user@email.com", "12345678", UserRole.USER);
-        var securityUser = new SecurityUser(userEntity);
+        var userPrincipal = new UserPrincipal(userEntity);
 
-        var response = jwtService.generateAccessToken(securityUser);
+        var response = jwtService.generateAccessToken(userPrincipal);
 
         var claims = jwtService.parseAllClaims(response.token());
         assertAll(
@@ -49,9 +49,9 @@ class JwtServiceTest {
         var jwtService = new JwtService(
                 new JwtProperties(secret, -10),
                 clock);
-        var securityUser = new SecurityUser(mock());
+        var userPrincipal = new UserPrincipal(mock());
 
-        var response = jwtService.generateAccessToken(securityUser);
+        var response = jwtService.generateAccessToken(userPrincipal);
 
         Executable executable = () -> jwtService.parseAllClaims(response.token());
         assertThrows(ExpiredJwtException.class, executable);

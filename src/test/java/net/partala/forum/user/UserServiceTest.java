@@ -28,6 +28,7 @@ class UserServiceTest {
     @Test
     void createUser_SaveWithAdminRole_WhenUserFirst() {
         when(userRepository.existsBy()).thenReturn(false);
+        when(userRepository.save(any())).thenReturn(new UserEntity());
 
         userService.createUser(RegistrationRequest.empty());
 
@@ -41,8 +42,9 @@ class UserServiceTest {
     void createUser_SaveWithUserRole_WhenUserIsNotFirst() {
         when(userRepository.existsBy()).thenReturn(true);
         when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(Optional.empty());
+        when(userRepository.save(any())).thenReturn(new UserEntity());
 
-        userService.createUser(mock());
+        userService.createUser(RegistrationRequest.empty());
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepository).save(captor.capture());
@@ -62,7 +64,7 @@ class UserServiceTest {
         when(userRepository.existsBy()).thenReturn(true);
         when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(Optional.of(new UserEntity()));
 
-        Executable executable = () -> userService.createUser(mock());
+        Executable executable = () -> userService.createUser(RegistrationRequest.empty());
 
         assertThrows(AlreadyExistsException.class, executable);
     }

@@ -7,11 +7,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SecurityUserService implements UserDetailsService {
+public class UserPrincipalService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public SecurityUserService(UserRepository userRepository) {
+    public UserPrincipalService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -20,8 +20,7 @@ public class SecurityUserService implements UserDetailsService {
         if(login.isBlank()) {
             throw new UsernameNotFoundException("Blank login");
         }
-        return userRepository.findByUsernameOrEmail(login, login)
-                .map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var user = userRepository.findByUsernameOrEmail(login, login).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return new UserPrincipal(user);
     }
 }

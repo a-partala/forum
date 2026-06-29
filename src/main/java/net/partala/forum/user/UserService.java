@@ -6,6 +6,8 @@ import net.partala.forum.exception.AlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class UserService {
@@ -17,7 +19,7 @@ public class UserService {
     }
 
     @Transactional
-    public void createUser(RegistrationRequest request) {
+    public UserResponse createUser(RegistrationRequest request) {
 
         if(request == null) {
             throw new IllegalArgumentException("Empty registration request");
@@ -36,7 +38,12 @@ public class UserService {
                 request.email(),
                 request.password(),
                 role);
-        repository.save(entity);
+        var savedUser = repository.save(entity);
+        return UserResponse.of(savedUser);
+    }
+
+    public Optional<UserEntity> findById(Long id) {
+        return repository.findById(id);
     }
 
     public boolean isEmailAvailable(String email) {

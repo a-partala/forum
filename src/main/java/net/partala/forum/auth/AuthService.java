@@ -3,6 +3,7 @@ package net.partala.forum.auth;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.jwt.JwtService;
 import net.partala.forum.auth.jwt.JwtResponse;
+import net.partala.forum.user.UserResponse;
 import net.partala.forum.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,12 +26,14 @@ class AuthService {
         this.encoder = encoder;
     }
 
-    void register(RegistrationRequest request) {
-        userService.createUser(new RegistrationRequest(
+    UserResponse register(RegistrationRequest request) {
+        var response = userService.createUser(new RegistrationRequest(
                 request.username(),
                 request.email(),
                 encoder.encode(request.password())
         ));
+
+        return response;
     }
 
     JwtResponse login(LoginRequest request) {
@@ -38,7 +41,7 @@ class AuthService {
                 request.login(),
                 request.password());
         var auth = authenticationManager.authenticate(authToken);
-        var securityUser = (SecurityUser) auth.getPrincipal();
+        var securityUser = (UserPrincipal) auth.getPrincipal();
         return jwtService.generateAccessToken(securityUser);
     }
 }

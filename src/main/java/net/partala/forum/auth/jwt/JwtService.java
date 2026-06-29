@@ -4,8 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import net.partala.forum.auth.SecurityUser;
+import net.partala.forum.auth.UserPrincipal;
 import net.partala.forum.config.JwtProperties;
+import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class JwtService {
 
     private static final String TOKEN_TYPE = "Bearer";
+    private static final String ID_KEY = "id";
     private static final String ROLE_KEY = "role";
     private static final String PURPOSE_KEY = "purpose";
 
@@ -35,16 +37,17 @@ public class JwtService {
         this.clock = clock;
     }
 
-    public JwtResponse generateAccessToken(SecurityUser securityUser) {
-        Objects.requireNonNull(securityUser, "securityUser is null");
+    public JwtResponse generateAccessToken(UserPrincipal userPrincipal) {
+        Objects.requireNonNull(userPrincipal, "user principal is null");
 
         Instant now = Instant.now(clock);
         Instant expire = now.plus(Duration.ofMinutes(properties.expirationMinutes()));
 
         var token = Jwts.builder()
                 .claim(PURPOSE_KEY, TokenPurpose.ACCESS)
-                .claim(ROLE_KEY, securityUser.getRole())
-                .subject(securityUser.getUsername())
+                .claim(ID_KEY,userPrincipal.getContext().id())
+                .claim(ROLE_KEY, userPrincipal.getContext().role())
+                .subject(userPrincipal.getUsername())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expire))
                 .signWith(getSigningKey())
@@ -54,6 +57,14 @@ public class JwtService {
 
     public Set<GrantedAuthority> extractAuthorities(Claims claims) {
         return Set.of(UserRole.valueOf(claims.get(ROLE_KEY, String.class)));
+    }
+
+    public Long extractId(Claims claims) {
+        return claims.get(ID_KEY, Long.class);
+    }
+
+    public UserRole extractRole(Claims claims) {
+        return UserRole.valueOf(claims.get(ROLE_KEY, String.class));
     }
 
     public TokenPurpose extractPurpose(Claims claims) {

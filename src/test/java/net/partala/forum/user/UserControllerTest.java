@@ -1,6 +1,7 @@
 package net.partala.forum.user;
 
-import net.partala.forum.WebIntegrationTest;
+import net.partala.forum.BaseIntegrationTest;
+import net.partala.forum.dto.AvailabilityResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -10,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserControllerTest extends WebIntegrationTest {
+class UserControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;

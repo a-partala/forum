@@ -8,11 +8,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import net.partala.forum.auth.UserPrincipalService;
+import net.partala.forum.user.UserContext;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -57,7 +60,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             var username = tokenClaims.getSubject();
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 var auth = new UsernamePasswordAuthenticationToken(
-                        username,
+                        new UserContext(
+                                jwtService.extractId(tokenClaims),
+                                jwtService.extractRole(tokenClaims)),
                         null,
                         jwtService.extractAuthorities(tokenClaims)
                 );
