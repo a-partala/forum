@@ -1,4 +1,4 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm;
 
 import java.util.HashSet;
 import java.util.Optional;

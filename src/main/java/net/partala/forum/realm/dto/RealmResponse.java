@@ -1,4 +1,6 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm.dto;
+
+import net.partala.forum.realm.RealmEntity;
 
 public record RealmResponse (
         Long id,

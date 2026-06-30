@@ -1,4 +1,4 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,10 +1,13 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm;
 
 import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
 import net.partala.forum.dto.AbilityResponse;
 import net.partala.forum.exception.AlreadyExistsException;
+import net.partala.forum.realm.dto.CreateRealmRequest;
+import net.partala.forum.realm.dto.RealmResponse;
+import net.partala.forum.realm.dto.RealmSearchFilter;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.config.RealmProperties;
 import net.partala.forum.user.UserService;
@@ -37,7 +40,7 @@ public class RealmService {
     }
 
     RealmResponse createRealm(CreateRealmRequest request,
-                            UserContext userContext) {
+                              UserContext userContext) {
 
         var owner = userService
                 .findById(request.ownerId())

@@ -1,11 +1,12 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
-import java.util.Set;
 
-import net.partala.forum.auth.UserPrincipal;
+import net.partala.forum.realm.dto.CreateRealmRequest;
+import net.partala.forum.realm.dto.RealmResponse;
+import net.partala.forum.realm.dto.RealmSearchFilter;
 import net.partala.forum.user.UserContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

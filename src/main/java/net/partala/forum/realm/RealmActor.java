@@ -1,9 +1,9 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm;
 import net.partala.forum.dto.AbilityResponse;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserRole;
 
-class RealmActor {
+final class RealmActor {
 
     private final Long id;
     private final UserRole role;

@@ -1,4 +1,4 @@
-package net.partala.forum.realms;
+package net.partala.forum.realm;
 
 import net.partala.forum.user.UserEntity;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BranchDataTest {
