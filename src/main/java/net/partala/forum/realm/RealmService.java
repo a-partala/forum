@@ -3,6 +3,7 @@ package net.partala.forum.realm;
 import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.dto.AbilityResponse;
 import net.partala.forum.exception.AlreadyExistsException;
 import net.partala.forum.realm.dto.CreateRealmRequest;
@@ -14,17 +15,28 @@ import net.partala.forum.user.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class RealmService {
 
     private final RealmProperties properties;
     private final UserService userService;
-    private final RealmRepository realmRepository;
+    private final RealmRepository repository;
 
-    RealmService(RealmProperties properties, UserService userService, RealmRepository realmRepository) {
+    RealmService(RealmProperties properties, UserService userService, RealmRepository repository) {
         this.properties = properties;
         this.userService = userService;
-        this.realmRepository = realmRepository;
+        this.repository = repository;
+    }
+
+    public RealmResponse getRealmById(Long id) {
+        var entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "No realm with id " + id));
+        return RealmResponse.of(entity);
+    }
+
+    public RealmEntity getReferenceById(Long id) {
+        return repository.getReferenceById(id);
     }
 
     List<RealmResponse> searchByFilter(RealmSearchFilter filter) {
@@ -32,7 +44,7 @@ public class RealmService {
                 .ofSize(filter.pageSize() != null ? filter.pageSize() : 10)
                 .withPage(filter.pageId() != null ? filter.pageId() : 0);
 
-        return realmRepository.searchByFilter(
+        return repository.searchByFilter(
                 filter.parentRealmId(),
                 filter.ownerId(),
                 pageable
@@ -42,13 +54,9 @@ public class RealmService {
     RealmResponse createRealm(CreateRealmRequest request,
                               UserContext userContext) {
 
-        var owner = userService
-                .findById(request.ownerId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No user with id " + request.ownerId())
-                );
+        var owner = userService.getReferenceById(request.ownerId());
 
-        if(realmRepository.findByName(request.name()).isPresent()) {
+        if(repository.findByName(request.name()).isPresent()) {
             throw new AlreadyExistsException("Realm with this name already exists");
         }
 
@@ -64,9 +72,11 @@ public class RealmService {
                 request.parentId()
         );
 
-        var savedRealm = realmRepository.save(realm);
+        var savedRealm = repository.save(realm);
 
-        return RealmResponse.of(savedRealm);
+        var response = RealmResponse.of(savedRealm);
+        log.info("realm created: {}", response);
+        return response;
     }
 
     AbilityResponse canCreateRealmInRealm(Long parentRealmId,
@@ -75,6 +85,6 @@ public class RealmService {
         var actor = new RealmActor(
                 userContext,
                 properties.maxDepth());
-        return actor.canCreate(BranchData.of(parentRealmId, realmRepository::findById));
+        return actor.canCreate(BranchData.of(parentRealmId, repository::findById));
     }
 }

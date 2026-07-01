@@ -24,6 +24,14 @@ public class RealmController {
         this.realmService = realmService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<RealmResponse> getRealmById(@PathVariable("id") Long id) {
+
+        log.info("getRealmById called with id {}", id);
+        var response = realmService.getRealmById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @GetMapping
     public ResponseEntity<List<RealmResponse>> searchByFilter(
             @RequestParam(value = "parentRealmId", required = false) Long parentRealmId,

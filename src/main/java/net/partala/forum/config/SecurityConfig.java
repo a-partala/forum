@@ -36,7 +36,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/users/check-availability/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/realms").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/realms/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/threads/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exConfigurer -> exConfigurer.authenticationEntryPoint(authEntryPoint))

@@ -1,12 +1,11 @@
 package net.partala.forum.user;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.RegistrationRequest;
 import net.partala.forum.exception.AlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -42,8 +41,14 @@ public class UserService {
         return UserResponse.of(savedUser);
     }
 
-    public Optional<UserEntity> findById(Long id) {
-        return repository.findById(id);
+    public UserResponse getUserById(Long id) {
+        var entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "No user with id " + id));
+        return UserResponse.of(entity);
+    }
+
+    public UserEntity getReferenceById(Long id) {
+        return repository.getReferenceById(id);
     }
 
     public boolean isEmailAvailable(String email) {
