@@ -1,7 +1,7 @@
 package net.partala.forum.user;
 
 import net.partala.forum.BaseIntegrationTest;
-import net.partala.forum.dto.AvailabilityResponse;
+import net.partala.forum.common.AvailabilityResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

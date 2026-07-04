@@ -1,4 +1,4 @@
-package net.partala.forum.dto;
+package net.partala.forum.common;
 
 public record AvailabilityResponse(
         boolean isAvailable

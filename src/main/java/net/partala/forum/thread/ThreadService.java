@@ -28,6 +28,11 @@ public class ThreadService {
         this.realmService = realmService;
     }
 
+    public ThreadResponse getReferenceById(Long id) {
+        var entity = repository.getReferenceById(id);
+        return ThreadResponse.of(entity);
+    }
+
     public ThreadResponse getThreadById(Long id) {
         var entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "No thread with id " + id));

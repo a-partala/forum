@@ -1,4 +1,4 @@
-package net.partala.forum.dto;
+package net.partala.forum.common;
 
 public final class AbilityResponse {
     private static final AbilityResponse positive = new AbilityResponse(true, "");

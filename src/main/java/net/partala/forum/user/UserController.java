@@ -1,9 +1,11 @@
 package net.partala.forum.user;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.annotation.EmailValidation;
 import net.partala.forum.auth.annotation.UsernameValidation;
-import net.partala.forum.dto.AvailabilityResponse;
+import net.partala.forum.common.AvailabilityResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable("id") @NotNull @Positive Long id) {
 
         log.info("getUserById called with id {}", id);
         var response = userService.getUserById(id);

@@ -17,11 +17,8 @@ public interface RealmRepository extends JpaRepository<RealmEntity, Long> {
             ((r.parentId IS NULL AND :parentRealmId IS NULL)
             OR
             (r.parentId = :parentRealmId))
-            
-            AND (:ownerId IS NULL OR r.owner.id = :ownerId)
             """)
     List<RealmEntity> searchByFilter(Long parentRealmId,
-                                     Long ownerId,
                                      Pageable pageable);
 
     Optional<RealmEntity> findByName(String name);

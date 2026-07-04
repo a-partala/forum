@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/realms/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/threads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exConfigurer -> exConfigurer.authenticationEntryPoint(authEntryPoint))

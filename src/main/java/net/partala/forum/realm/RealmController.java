@@ -1,12 +1,14 @@
 package net.partala.forum.realm;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
+import net.partala.forum.common.PageMapper;
 import net.partala.forum.realm.dto.CreateRealmRequest;
 import net.partala.forum.realm.dto.RealmResponse;
-import net.partala.forum.realm.dto.RealmSearchFilter;
 import net.partala.forum.user.UserContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class RealmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RealmResponse> getRealmById(@PathVariable("id") Long id) {
+    public ResponseEntity<RealmResponse> getRealmById(@PathVariable("id") @NotNull @Positive Long id) {
 
         log.info("getRealmById called with id {}", id);
         var response = realmService.getRealmById(id);
@@ -33,15 +35,14 @@ public class RealmController {
     }
 
     @GetMapping
-    public ResponseEntity<List<RealmResponse>> searchByFilter(
+    public ResponseEntity<List<RealmResponse>> searchByParent(
             @RequestParam(value = "parentRealmId", required = false) Long parentRealmId,
-            @RequestParam(value = "ownerId", required = false) Long ownerId,
             @RequestParam(value = "pageSize", required = false) Integer pageSize,
             @RequestParam(value = "pageId", required = false) Integer pageId
     ) {
         log.info("called search by filter");
 
-        var result = realmService.searchByFilter(new RealmSearchFilter(parentRealmId, ownerId, pageSize, pageId));
+        var result = realmService.searchByFilter(parentRealmId, PageMapper.pageableOf(pageSize, pageId));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 

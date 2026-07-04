@@ -4,11 +4,10 @@ import java.util.List;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import net.partala.forum.dto.AbilityResponse;
+import net.partala.forum.common.AbilityResponse;
 import net.partala.forum.exception.AlreadyExistsException;
 import net.partala.forum.realm.dto.CreateRealmRequest;
 import net.partala.forum.realm.dto.RealmResponse;
-import net.partala.forum.realm.dto.RealmSearchFilter;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.config.RealmProperties;
 import net.partala.forum.user.UserService;
@@ -39,14 +38,10 @@ public class RealmService {
         return repository.getReferenceById(id);
     }
 
-    List<RealmResponse> searchByFilter(RealmSearchFilter filter) {
-        var pageable = Pageable
-                .ofSize(filter.pageSize() != null ? filter.pageSize() : 10)
-                .withPage(filter.pageId() != null ? filter.pageId() : 0);
+    List<RealmResponse> searchByFilter(Long parentRealmId, Pageable pageable) {
 
         return repository.searchByFilter(
-                filter.parentRealmId(),
-                filter.ownerId(),
+                parentRealmId,
                 pageable
         ).stream().map(RealmResponse::of).toList();
     }

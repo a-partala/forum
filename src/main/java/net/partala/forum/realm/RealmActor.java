@@ -1,5 +1,5 @@
 package net.partala.forum.realm;
-import net.partala.forum.dto.AbilityResponse;
+import net.partala.forum.common.AbilityResponse;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserRole;
 
