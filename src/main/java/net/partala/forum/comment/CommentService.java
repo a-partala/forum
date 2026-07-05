@@ -8,6 +8,8 @@ import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 
 @Slf4j
@@ -43,6 +45,7 @@ public class CommentService {
                 .toList();
     }
 
+    @Transactional
     private CommentResponse createComment(CreateCommentRequest request,
                                           Long threadId,
                                           Long parentId,

@@ -6,9 +6,9 @@ import net.partala.forum.realm.RealmService;
 import net.partala.forum.thread.dto.CreateThreadRequest;
 import net.partala.forum.thread.dto.ThreadResponse;
 import net.partala.forum.user.UserContext;
-import net.partala.forum.user.UserResponse;
 import net.partala.forum.user.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -39,6 +39,7 @@ public class ThreadService {
         return ThreadResponse.of(entity);
     }
 
+    @Transactional
     public ThreadResponse createThread(CreateThreadRequest request,
                                        UserContext userContext) {
 

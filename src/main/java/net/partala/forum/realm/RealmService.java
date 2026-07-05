@@ -13,6 +13,7 @@ import net.partala.forum.config.RealmProperties;
 import net.partala.forum.user.UserService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -46,6 +47,7 @@ public class RealmService {
         ).stream().map(RealmResponse::of).toList();
     }
 
+    @Transactional
     RealmResponse createRealm(CreateRealmRequest request,
                               UserContext userContext) {
 
