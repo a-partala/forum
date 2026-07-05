@@ -23,16 +23,23 @@ public class CommentService {
     }
 
     List<CommentResponse> getThreadComments(Long threadId, Pageable pageable) {
-        return repository.getThreadComments(threadId, pageable)
-                .stream()
-                .map(CommentResponse::of)
-                .toList();
+        return convertToResponse(repository.getThreadComments(threadId, pageable));
     }
 
     List<CommentResponse> getCommentReplies(Long commentId, Pageable pageable) {
-        return repository.getCommentReplies(commentId, pageable)
-                .stream()
-                .map(CommentResponse::of)
+        return convertToResponse(repository.getCommentReplies(commentId, pageable));
+    }
+
+    List<CommentResponse> convertToResponse(List<CommentEntity> entities) {
+
+        if(entities.isEmpty()) {
+            return List.of();
+        }
+
+        Set<Long> replied = repository.selectReplied(entities.stream().map(CommentEntity::getId).toList());
+        return entities.stream()
+                .map(entity ->
+                        CommentResponse.of(entity, replied.contains(entity.getId())))
                 .toList();
     }
 

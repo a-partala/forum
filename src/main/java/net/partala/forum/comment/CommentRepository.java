@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
@@ -22,4 +23,10 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
             WHERE c.parentId = :commentId
             """)
     List<CommentEntity> getCommentReplies(Long commentId, Pageable pageable);
+
+    @Query("""
+            SELECT c.parentId FROM CommentEntity c
+            WHERE c.parentId IN :commentIds
+            """)
+    Set<Long> selectReplied(List<Long> commentIds);
 }

@@ -7,15 +7,21 @@ public record CommentResponse(
         String content,
         Long creatorId,
         Long threadId,
-        Long parentId
+        Long parentId,
+        boolean hasReplies
 ) {
 
-    public static CommentResponse of(CommentEntity entity) {
+    public static CommentResponse of(CommentEntity entity, boolean hasReplies) {
         return new CommentResponse(
                 entity.getId(),
                 entity.getContent(),
                 entity.getCreator().getId(),
                 entity.getThreadId(),
-                entity.getParentId());
+                entity.getParentId(),
+                hasReplies);
+    }
+
+    public static CommentResponse of(CommentEntity entity) {
+        return of(entity, false);
     }
 }
