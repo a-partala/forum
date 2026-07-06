@@ -34,12 +34,8 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/users/check-availability/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/realms/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/threads/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
+                        .requestMatchers("/auth/**", "/email/verify", "/users/check-availability/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users/**", "/realms/**", "/threads/**", "/comments/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exConfigurer -> exConfigurer.authenticationEntryPoint(authEntryPoint))

@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.UserPrincipal;
 import net.partala.forum.config.JwtProperties;
+import net.partala.forum.user.AccountStatus;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserRole;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +28,8 @@ public class JwtService {
     private static final String TOKEN_TYPE = "Bearer";
     private static final String ID_KEY = "id";
     private static final String ROLE_KEY = "role";
+    private static final String STATUS_KEY = "accountStatus";
+    private static final String EMAIL_KEY = "email";
     private static final String PURPOSE_KEY = "purpose";
 
     private final JwtProperties properties;
@@ -41,13 +44,31 @@ public class JwtService {
         Objects.requireNonNull(userPrincipal, "user principal is null");
 
         Instant now = Instant.now(clock);
-        Instant expire = now.plus(Duration.ofMinutes(properties.expirationMinutes()));
+        Instant expire = now.plus(Duration.ofMinutes(properties.accessExpirationMinutes()));
 
         var token = Jwts.builder()
                 .claim(PURPOSE_KEY, TokenPurpose.ACCESS)
                 .claim(ID_KEY,userPrincipal.getContext().id())
                 .claim(ROLE_KEY, userPrincipal.getContext().role())
+                .claim(STATUS_KEY, userPrincipal.getContext().status())
                 .subject(userPrincipal.getUsername())
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expire))
+                .signWith(getSigningKey())
+                .compact();
+        return new JwtResponse(token, TOKEN_TYPE, expire);
+    }
+
+    public JwtResponse generateEmailVerificationToken(UserContext userContext, String email) {
+        Objects.requireNonNull(userContext, "user is null");
+
+        Instant now = Instant.now(clock);
+        Instant expire = now.plus(Duration.ofMinutes(properties.emailVerificationExpirationMinutes()));
+
+        var token = Jwts.builder()
+                .claim(PURPOSE_KEY, TokenPurpose.VERIFY_EMAIL)
+                .claim(ID_KEY, userContext.id())
+                .claim(EMAIL_KEY, email)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expire))
                 .signWith(getSigningKey())
@@ -63,9 +84,15 @@ public class JwtService {
         return claims.get(ID_KEY, Long.class);
     }
 
+    public String extractEmail(Claims claims) {
+        return claims.get(EMAIL_KEY, String.class);
+    }
+
     public UserRole extractRole(Claims claims) {
         return UserRole.valueOf(claims.get(ROLE_KEY, String.class));
     }
+
+    public AccountStatus extractStatus(Claims claims) { return AccountStatus.valueOf(claims.get(STATUS_KEY, String.class)); }
 
     public TokenPurpose extractPurpose(Claims claims) {
         return TokenPurpose.valueOf(claims.get(PURPOSE_KEY, String.class));

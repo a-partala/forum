@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -70,7 +72,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(exception = {
             BadCredentialsException.class,
-            UsernameNotFoundException.class
+            UsernameNotFoundException.class,
+            CredentialsExpiredException.class
     })
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(Exception e) {
 
@@ -79,6 +82,24 @@ public class GlobalExceptionHandler {
         var errorDto = new ErrorResponse(
                 "Unauthorized",
                 "Incorrect login or password",
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errorDto);
+    }
+
+    @ExceptionHandler(exception = {
+            DisabledException.class
+    })
+    public ResponseEntity<ErrorResponse> handleDisabledException(Exception e) {
+
+        log.error("Handle unauthorized", e);
+
+        var errorDto = new ErrorResponse(
+                "Unauthorized",
+                "Disabled user account",
                 LocalDateTime.now()
         );
 

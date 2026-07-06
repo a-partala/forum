@@ -82,6 +82,6 @@ public class RealmService {
         var actor = new RealmActor(
                 userContext,
                 properties.maxDepth());
-        return actor.canCreate(BranchData.of(parentRealmId, repository::findById));
+        return actor.canCreateInBranch(BranchData.of(parentRealmId, repository::findById));
     }
 }

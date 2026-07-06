@@ -9,10 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.auth.UserPrincipalService;
+import net.partala.forum.user.AccountStatus;
 import net.partala.forum.user.UserContext;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,8 +54,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             var token = jwtService.trimPrefix(rawToken);
             Claims tokenClaims = jwtService.parseAllClaims(token);
+            var status = jwtService.extractStatus(tokenClaims);
 
-            if(jwtService.extractPurpose(tokenClaims) != TokenPurpose.ACCESS) {
+            if(!jwtService.extractPurpose(tokenClaims).equals(TokenPurpose.ACCESS)) {
                 throw new BadCredentialsException("Invalid token purpose");
             }
 
@@ -62,7 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var auth = new UsernamePasswordAuthenticationToken(
                         new UserContext(
                                 jwtService.extractId(tokenClaims),
-                                jwtService.extractRole(tokenClaims)),
+                                jwtService.extractRole(tokenClaims),
+                                status),
                         null,
                         jwtService.extractAuthorities(tokenClaims)
                 );
@@ -72,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             authEntryPoint.commence(request, response, new CredentialsExpiredException("Token expired", e));
             return;
-        } catch (BadCredentialsException e) {
+        } catch (BadCredentialsException | DisabledException e) {
             authEntryPoint.commence(request, response, e);
             return;
         } catch (JwtException | IllegalArgumentException e) {

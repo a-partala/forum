@@ -9,7 +9,9 @@ import net.partala.forum.realm.RealmController;
 import net.partala.forum.realm.dto.CreateRealmRequest;
 import net.partala.forum.thread.ThreadController;
 import net.partala.forum.thread.dto.CreateThreadRequest;
+import net.partala.forum.user.AccountStatus;
 import net.partala.forum.user.UserContext;
+import net.partala.forum.user.UserRepository;
 import net.partala.forum.user.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ class CommentControllerTest extends BaseIntegrationTest {
     @DisplayName("Should return correct hasReplies values during full user scenario")
     void getThreadComments() throws Exception {
         var user = authController.register(new RegistrationRequest("admin", "admin@gmail.com", "12345678"));
-        var userContext = new UserContext(user.getBody().id(), UserRole.ADMIN);
+        var userContext = new UserContext(user.getBody().id(), UserRole.ADMIN, AccountStatus.ACTIVE);
         var realm = realmController.createRealm(new CreateRealmRequest("name", "description", user.getBody().id(), null), userContext);
         var thread = threadController.createThread(new CreateThreadRequest("title", "content", realm.getBody().id()), userContext);
         var commentRequest = new CreateCommentRequest("content");

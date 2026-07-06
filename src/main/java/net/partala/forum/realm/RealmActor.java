@@ -1,22 +1,23 @@
 package net.partala.forum.realm;
 import net.partala.forum.common.AbilityResponse;
+import net.partala.forum.user.Actor;
 import net.partala.forum.user.UserContext;
-import net.partala.forum.user.UserRole;
 
-final class RealmActor {
+final class RealmActor extends Actor {
 
-    private final Long id;
-    private final UserRole role;
     private final int maxRealmDepth;
 
     RealmActor(UserContext userContext,
                int maxRealmDepth) {
-        id = userContext.id();
-        this.role = userContext.role();
+        super(userContext);
         this.maxRealmDepth = maxRealmDepth;
     }
 
-    AbilityResponse canCreate(BranchData branch) {
+    AbilityResponse canCreateInBranch(BranchData branch) {
+
+        if(!isActive()) {
+            return INACTIVE_ACCOUNT_RESPONSE;
+        }
 
         if(isAdmin()) {
             return AbilityResponse.can();
@@ -37,7 +38,20 @@ final class RealmActor {
         return AbilityResponse.can();
     }
 
-    boolean isAdmin() {
-        return role.equals(UserRole.ADMIN);
+    AbilityResponse canEdit(BranchData branch) {
+
+        if(!isActive()) {
+            return INACTIVE_ACCOUNT_RESPONSE;
+        }
+
+        if(isAdmin()) {
+            return AbilityResponse.can();
+        }
+
+        if(!branch.ancestorOwners().contains(id)) {
+            return AbilityResponse.cannot("Don't have access to this scope");
+        }
+
+        return AbilityResponse.can();
     }
 }

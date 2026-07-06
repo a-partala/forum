@@ -24,7 +24,8 @@ public class UserService {
             throw new IllegalArgumentException("Empty registration request");
         }
 
-        UserRole role = UserRole.USER;
+        var role = UserRole.USER;
+        var status = AccountStatus.UNVERIFIED;
 
         if(!repository.existsBy()) {
             role = UserRole.ADMIN;
@@ -34,21 +35,26 @@ public class UserService {
 
         var entity = new UserEntity(
                 request.username(),
-                request.email(),
+                null,
                 request.password(),
-                role);
+                role,
+                status);
         var savedUser = repository.save(entity);
         return UserResponse.of(savedUser);
     }
 
     public UserResponse getUserById(Long id) {
-        var entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                "No user with id " + id));
+        var entity = getEntityById(id);
         return UserResponse.of(entity);
     }
 
     public UserEntity getReferenceById(Long id) {
         return repository.getReferenceById(id);
+    }
+
+    private UserEntity getEntityById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "No user with id " + id));
     }
 
     public boolean isEmailAvailable(String email) {
@@ -59,5 +65,22 @@ public class UserService {
     public boolean isUsernameAvailable(String username) {
 
         return repository.findByUsername(username).isEmpty();
+    }
+
+    @Transactional
+    public void verify(Long id, String email) {
+
+        var targetEmailUser = repository.findByEmail(email);
+        if(targetEmailUser.isPresent()) {
+            if(targetEmailUser.get().getId().equals(id)) {
+                throw new IllegalStateException("Email is already verified");
+            }
+            throw new IllegalStateException("Email is not available");
+        }
+
+        var user = getEntityById(id);
+        user.setEmail(email);
+        user.setStatus(AccountStatus.ACTIVE);
+        repository.save(user);
     }
 }

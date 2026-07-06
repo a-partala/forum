@@ -22,7 +22,7 @@ class UserControllerTest extends BaseIntegrationTest {
     void isUsernameAvailable_ReturnTrue_WhenDoesntExist() throws Exception {
 
         String username = "user";
-        userRepository.save(new UserEntity("", "user@email.com", "", UserRole.USER));
+        userRepository.save(new UserEntity("", "user@email.com", "", UserRole.USER, AccountStatus.UNVERIFIED));
 
         mockMvc.perform(
             post("/users/check-availability/username")
@@ -36,8 +36,8 @@ class UserControllerTest extends BaseIntegrationTest {
     void isUsernameAvailable_ReturnFalse_WhenExists() throws Exception {
 
         String username = "user";
-        userRepository.save(new UserEntity(username, "", "", UserRole.USER));
-        userRepository.save(new UserEntity("", "user@email.com", "", UserRole.USER));
+        userRepository.save(new UserEntity(username, "", "", UserRole.USER, AccountStatus.UNVERIFIED));
+        userRepository.save(new UserEntity("", "user@email.com", "", UserRole.USER, AccountStatus.UNVERIFIED));
 
         mockMvc.perform(
                         post("/users/check-availability/username")
@@ -64,7 +64,7 @@ class UserControllerTest extends BaseIntegrationTest {
     void isEmailAvailable_ReturnFalse_WhenExists() throws Exception {
 
         String email = "user@email.com";
-        userRepository.save(new UserEntity("", email, "", UserRole.USER));
+        userRepository.save(new UserEntity("", email, "", UserRole.USER, AccountStatus.UNVERIFIED));
 
         mockMvc.perform(
                         post("/users/check-availability/email")

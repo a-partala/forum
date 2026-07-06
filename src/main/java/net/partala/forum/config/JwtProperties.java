@@ -9,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 public record JwtProperties(
         String secret,
         @Positive
-        int expirationMinutes
+        int accessExpirationMinutes,
+        @Positive
+        int emailVerificationExpirationMinutes
 ) {
 }

@@ -41,13 +41,54 @@ class AuthControllerTest extends BaseIntegrationTest {
         assertThat(savedUser)
                 .isPresent().get()
                 .extracting(UserEntity::getEmail)
-                .isEqualTo(registrationRequest.email());
+                .isNull();
     }
 
     @Test
     void login_ShouldReturnCorrectToken() throws Exception {
 
         authService.register(registrationRequest);
+        var loginRequest = new LoginRequest(registrationRequest.username(), registrationRequest.password());
+        var loginRequestJson = mapper.writeValueAsString(loginRequest);
+
+        var resultJson = mockMvc.perform(
+                        post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(loginRequestJson))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        var result = mapper.readValue(resultJson, JwtResponse.class);
+        var jwtClaims = jwtService.parseAllClaims(result.token());
+        assertThat(jwtClaims.getSubject()).isEqualTo(registrationRequest.username());
+    }
+
+    @Test
+    void login_ShouldReturnUnauthorized_WhenLoginWithUnverifiedEmail() throws Exception {
+
+        authService.register(registrationRequest);
+        var loginRequest = new LoginRequest(registrationRequest.email(), registrationRequest.password());
+        var loginRequestJson = mapper.writeValueAsString(loginRequest);
+
+        var resultJson = mockMvc.perform(
+                        post("/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(loginRequestJson))
+                .andExpect(status().isUnauthorized())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+    }
+
+    @Test
+    void login_ShouldLogin_WhenLoginWithVerifiedEmail() throws Exception {
+
+        var response = authService.register(registrationRequest);
+        var savedUser = userRepository.findById(response.id());
+        savedUser.get().setEmail(registrationRequest.email());
+        userRepository.save(savedUser.get());
         var loginRequest = new LoginRequest(registrationRequest.email(), registrationRequest.password());
         var loginRequestJson = mapper.writeValueAsString(loginRequest);
 

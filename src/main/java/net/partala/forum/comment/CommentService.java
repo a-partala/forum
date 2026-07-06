@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.comment.dto.CommentResponse;
 import net.partala.forum.comment.dto.CreateCommentRequest;
+import net.partala.forum.common.AbilityResponse;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserService;
 import org.springframework.data.domain.Pageable;
@@ -25,11 +26,15 @@ public class CommentService {
     }
 
     List<CommentResponse> getThreadComments(Long threadId, Pageable pageable) {
-        return convertToResponse(repository.getThreadComments(threadId, pageable));
+        return convertToResponse(
+                repository.getThreadComments(threadId, pageable)
+        );
     }
 
     List<CommentResponse> getCommentReplies(Long commentId, Pageable pageable) {
-        return convertToResponse(repository.getCommentReplies(commentId, pageable));
+        return convertToResponse(
+                repository.getCommentReplies(commentId, pageable)
+        );
     }
 
     List<CommentResponse> convertToResponse(List<CommentEntity> entities) {
@@ -50,6 +55,12 @@ public class CommentService {
                                           Long threadId,
                                           Long parentId,
                                           UserContext userContext) {
+
+        var actor = new CommentActor(userContext);
+        AbilityResponse canCreate = actor.canCreate();
+        if(!canCreate.result) {
+            throw new IllegalStateException(canCreate.reason);
+        }
 
         var creator = userService.getReferenceById(userContext.id());
         var commentEntity = new CommentEntity(request.content(), creator, threadId, parentId);

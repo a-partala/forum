@@ -3,6 +3,7 @@ package net.partala.forum.auth.jwt;
 import io.jsonwebtoken.ExpiredJwtException;
 import net.partala.forum.auth.UserPrincipal;
 import net.partala.forum.config.JwtProperties;
+import net.partala.forum.user.AccountStatus;
 import net.partala.forum.user.UserEntity;
 import net.partala.forum.user.UserRole;
 import org.junit.jupiter.api.Test;
@@ -28,9 +29,9 @@ class JwtServiceTest {
     @Test
     void generateAccessToken_ShouldMatchData() {
         var jwtService = new JwtService(
-                new JwtProperties(secret, 10),
+                new JwtProperties(secret, 10, 10),
                 clock);
-        var userEntity = new UserEntity("user", "user@email.com", "12345678", UserRole.USER);
+        var userEntity = new UserEntity("user", "user@email.com", "12345678", UserRole.USER, AccountStatus.UNVERIFIED);
         var userPrincipal = new UserPrincipal(userEntity);
 
         var response = jwtService.generateAccessToken(userPrincipal);
@@ -47,7 +48,7 @@ class JwtServiceTest {
     void generateAccessToken_Throw() {
         //will generate expired token
         var jwtService = new JwtService(
-                new JwtProperties(secret, -10),
+                new JwtProperties(secret, -10, -10),
                 clock);
         var userPrincipal = new UserPrincipal(mock());
 

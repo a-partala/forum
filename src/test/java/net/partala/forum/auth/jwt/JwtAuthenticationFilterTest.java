@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import net.partala.forum.user.AccountStatus;
 import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -93,6 +94,7 @@ class JwtAuthenticationFilterTest {
         when(jwtService.startsWithTargetType(any())).thenReturn(true);
         when(jwtService.parseAllClaims(any())).thenReturn(tokenClaims);
         when(jwtService.extractPurpose(any())).thenReturn(TokenPurpose.ACCESS);
+        when(jwtService.extractStatus(any())).thenReturn(AccountStatus.ACTIVE);
         when(jwtService.extractAuthorities(any())).thenReturn(new HashSet<>());
 
         authFilter.doFilterInternal(request, response, filterChain);

@@ -1,6 +1,7 @@
 package net.partala.forum.auth;
 
 import lombok.Getter;
+import net.partala.forum.user.AccountStatus;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +17,10 @@ public class UserPrincipal implements UserDetails {
     private final String password;
 
     public UserPrincipal(UserEntity entity) {
-        context = new UserContext(entity.getId(), entity.getRole());
+        context = new UserContext(
+                entity.getId(),
+                entity.getRole(),
+                entity.getStatus());
         this.username = entity.getUsername();
         this.password = entity.getPassword();
     }
@@ -33,4 +37,9 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() { return Set.of(context.role()); }
+
+    @Override
+    public boolean isEnabled() {
+        return !context.status().equals(AccountStatus.DELETED);
+    }
 }
