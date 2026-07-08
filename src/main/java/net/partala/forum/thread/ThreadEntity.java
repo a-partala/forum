@@ -22,11 +22,11 @@ public class ThreadEntity {
     @Setter
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private UserEntity creator;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "realm_id")
     private RealmEntity realm;
 

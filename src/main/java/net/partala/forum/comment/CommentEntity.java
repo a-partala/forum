@@ -19,7 +19,7 @@ public class CommentEntity {
     @Setter
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_id")
     private UserEntity creator;
 

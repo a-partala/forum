@@ -13,6 +13,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
     @Query("""
             SELECT c FROM CommentEntity c
+            JOIN FETCH c.creator
             WHERE c.threadId = :threadId
             AND c.parentId IS NULL
             """)
@@ -20,6 +21,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
 
     @Query("""
             SELECT c FROM CommentEntity c
+            JOIN FETCH c.creator
             WHERE c.parentId = :commentId
             """)
     List<CommentEntity> getCommentReplies(Long commentId, Pageable pageable);
