@@ -83,6 +83,12 @@ public class RealmService {
     RealmResponse updateRealm(Long id, RealmContentRequest request, UserContext userContext) {
 
         var realm = getEntityById(id);
+
+        if(realm.getName().equals(request.name()) &&
+                realm.getDescription().equals(request.description())) {
+            return RealmResponse.of(realm);
+        }
+
         var actor = new RealmActor(userContext);
         var branchData = getBranchData(id);
 
@@ -91,9 +97,7 @@ public class RealmService {
 
         realm.setName(request.name());
         realm.setDescription(request.description());
-        return RealmResponse.of(
-                repository.save(realm)
-        );
+        return RealmResponse.of(repository.save(realm));
     }
 
     AbilityResponse canCreateRealmInParent(Long parentRealmId,

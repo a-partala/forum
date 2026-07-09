@@ -8,6 +8,7 @@ public record RealmResponse (
         Long id,
         Long parentId,
         String name,
+        String description,
         Long ownerId,
         LocalDateTime createdAt
 ) {
@@ -16,6 +17,7 @@ public record RealmResponse (
                 entity.getId(),
                 entity.getParentId(),
                 entity.getName(),
+                entity.getDescription(),
                 entity.getOwner().getId(),
                 entity.getCreatedAt()
         );
