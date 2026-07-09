@@ -36,6 +36,7 @@ class AuthService {
                 request.email(),
                 encoder.encode(request.password())
         ));
+
         emailService.sendVerificationToken(
                 new UserContext(response.id(), response.role(), response.status()),
                 request.email());

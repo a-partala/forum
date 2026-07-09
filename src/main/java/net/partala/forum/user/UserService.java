@@ -58,12 +58,13 @@ public class UserService {
     }
 
     public boolean isEmailAvailable(String email) {
-
+        log.info("Is email available called with: {}", email);
         return repository.findByEmail(email).isEmpty();
     }
 
     public boolean isUsernameAvailable(String username) {
 
+        log.info("Is username available called with: {}", username);
         return repository.findByUsername(username).isEmpty();
     }
 

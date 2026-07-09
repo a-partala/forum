@@ -3,6 +3,8 @@ package net.partala.forum.user;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +31,7 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
 
+    @Generated
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 

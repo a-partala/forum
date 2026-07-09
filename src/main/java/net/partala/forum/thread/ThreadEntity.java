@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.partala.forum.realm.RealmEntity;
 import net.partala.forum.user.UserEntity;
+import org.hibernate.annotations.Generated;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,7 @@ public class ThreadEntity {
     @JoinColumn(name = "realm_id")
     private RealmEntity realm;
 
+    @Generated
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 

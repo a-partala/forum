@@ -22,9 +22,7 @@ public class EmailService {
     }
 
     public void sendVerificationToken(UserContext userContext, String email) {
-        if(!userService.isEmailAvailable(email)) {
-            throw new IllegalStateException("Email is not available");
-        }
+        log.info("sendVerificationToken called for user");
 
         var response = jwtService.generateEmailVerificationToken(userContext, email);
 
@@ -33,11 +31,8 @@ public class EmailService {
     }
 
     void verifyWithToken(String token) {
+        log.info("verifyWithToken called");
         try {
-            if(token.isBlank()) {
-                throw new IllegalArgumentException("Blank token");
-            }
-
             var claims = jwtService.parseAllClaims(token);
             var purpose = jwtService.extractPurpose(claims);
 
@@ -45,7 +40,11 @@ public class EmailService {
                 throw new IllegalArgumentException("Invalid token purpose");
             }
 
-            userService.verify(jwtService.extractId(claims), jwtService.extractEmail(claims));
+            var id = jwtService.extractId(claims);
+            var email = jwtService.extractEmail(claims);
+            userService.verify(id, email);
+
+            log.info("user with id {} verified email {}", id, email);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (ExpiredJwtException e) {

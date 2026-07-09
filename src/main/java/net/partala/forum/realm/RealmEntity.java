@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import net.partala.forum.user.UserEntity;
+import org.hibernate.annotations.Generated;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +30,7 @@ public class RealmEntity {
     @Column(name = "parent_id")
     private Long parentId;
 
+    @Generated
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
