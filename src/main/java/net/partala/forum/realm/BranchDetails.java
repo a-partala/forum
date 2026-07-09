@@ -5,7 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
-public record BranchData(
+public record BranchDetails(
         Long origin,
         Integer size,
         Set<Long> ancestorOwners
@@ -15,8 +15,8 @@ public record BranchData(
         return size() == 0;
     }
 
-    public static BranchData of(Long originId,
-                         Function<Long, Optional<RealmEntity>> realmFinderById) {
+    public static BranchDetails of(Long originId,
+                                   Function<Long, Optional<RealmEntity>> realmFinderById) {
 
         var owners = new HashSet<Long>();
         var seenRealms = new HashSet<Long>();
@@ -36,6 +36,6 @@ public record BranchData(
             currentId = realm.get().getParentId();
         }
 
-        return new BranchData(originId, seenRealms.size(), owners);
+        return new BranchDetails(originId, seenRealms.size(), owners);
     }
 }

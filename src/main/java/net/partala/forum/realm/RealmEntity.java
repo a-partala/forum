@@ -3,6 +3,7 @@ package net.partala.forum.realm;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.partala.forum.thread.ThreadStatus;
 import net.partala.forum.user.UserEntity;
 import org.hibernate.annotations.Generated;
 

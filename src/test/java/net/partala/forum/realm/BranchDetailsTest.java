@@ -14,13 +14,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class BranchDataTest {
+class BranchDetailsTest {
 
     private UserEntity user = new UserEntity();
 
     @Test
     void of_MatchFields_WhenNullOrigin() {
-        var branch = BranchData.of(null, null);
+        var branch = BranchDetails.of(null, null);
 
         assertAll(
                 () -> assertNull(branch.origin()),
@@ -49,7 +49,7 @@ class BranchDataTest {
             realm.setOwner(newOwner);
         }
 
-        var branch = BranchData.of(0L, id -> getById(realms, id));
+        var branch = BranchDetails.of(0L, id -> getById(realms, id));
 
         assertEquals(ownersAmount, branch.ancestorOwners().size());
     }
@@ -59,7 +59,7 @@ class BranchDataTest {
         int size = 10;
         var realms = createRealmsChain(size);
 
-        var branch = BranchData.of(0L, id -> getById(realms, id));
+        var branch = BranchDetails.of(0L, id -> getById(realms, id));
 
         assertEquals(size, branch.size());
     }
@@ -71,7 +71,7 @@ class BranchDataTest {
         var lastRealm = realms.get(realms.size() - 1L);
         ReflectionTestUtils.setField(lastRealm, "parentId", 0L);
 
-        Executable executable = () -> BranchData.of(0L, id -> getById(realms, id));
+        Executable executable = () -> BranchDetails.of(0L, id -> getById(realms, id));
 
         assertThrows(IllegalStateException.class, executable);
     }
@@ -83,7 +83,7 @@ class BranchDataTest {
         var lastRealm = realms.get(realms.size() - 1L);
         ReflectionTestUtils.setField(lastRealm, "parentId", 0L);
 
-        Executable executable = () -> BranchData.of(0L, id -> getById(realms, id));
+        Executable executable = () -> BranchDetails.of(0L, id -> getById(realms, id));
 
         assertThrows(IllegalStateException.class, executable);
     }
@@ -93,7 +93,7 @@ class BranchDataTest {
         int size = 3;
         var realms = createRealmsChain(size);
 
-        Executable executable = () -> BranchData.of(99L, id -> getById(realms, id));
+        Executable executable = () -> BranchDetails.of(99L, id -> getById(realms, id));
 
         assertThrows(IllegalStateException.class, executable);
     }
@@ -105,7 +105,7 @@ class BranchDataTest {
         var lastRealm = realms.get(realms.size() - 1L);
         ReflectionTestUtils.setField(lastRealm, "parentId", 99L);
 
-        Executable executable = () -> BranchData.of(0L, id -> getById(realms, id));
+        Executable executable = () -> BranchDetails.of(0L, id -> getById(realms, id));
 
         assertThrows(IllegalStateException.class, executable);
     }

@@ -90,7 +90,7 @@ public class RealmService {
         }
 
         var actor = new RealmActor(userContext);
-        var branchData = getBranchData(id);
+        var branchData = getBranchDetails(id);
 
         actor.canEdit(branchData)
                 .throwIfCannot();
@@ -104,11 +104,11 @@ public class RealmService {
                                            UserContext userContext) {
 
         var actor = new RealmActor(userContext);
-        var branch = getBranchData(parentRealmId);
+        var branch = getBranchDetails(parentRealmId);
         return actor.canCreateInBranch(branch, properties.maxDepth());
     }
 
-    private BranchData getBranchData(Long originId) {
-        return BranchData.of(originId, repository::findById);
+    public BranchDetails getBranchDetails(Long originId) {
+        return BranchDetails.of(originId, repository::findById);
     }
 }

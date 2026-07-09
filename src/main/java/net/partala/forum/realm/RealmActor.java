@@ -9,7 +9,7 @@ final class RealmActor extends Actor {
         super(userContext);
     }
 
-    AbilityResponse canCreateInBranch(BranchData branch, int maxRealmDepth) {
+    AbilityResponse canCreateInBranch(BranchDetails branch, int maxRealmDepth) {
 
         if(!isActive()) {
             return INACTIVE_ACCOUNT_RESPONSE;
@@ -34,7 +34,7 @@ final class RealmActor extends Actor {
         return AbilityResponse.can();
     }
 
-    AbilityResponse canEdit(BranchData branch) {
+    AbilityResponse canEdit(BranchDetails branch) {
 
         if(!isActive()) {
             return INACTIVE_ACCOUNT_RESPONSE;

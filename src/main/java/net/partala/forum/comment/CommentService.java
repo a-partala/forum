@@ -60,7 +60,7 @@ public class CommentService {
         actor.canCreate()
                 .throwIfCannot();
 
-        var creator = userService.getReferenceById(userContext.id());
+        var creator = userService.getEntityById(userContext.id());
         var commentEntity = new CommentEntity(request.content(), creator, threadId, parentId);
 
         var savedComment = repository.save(commentEntity);

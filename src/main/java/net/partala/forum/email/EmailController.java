@@ -24,7 +24,7 @@ public class EmailController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<?> verify(@PathParam("token") String token) {
+    public ResponseEntity<Void> verify(@PathParam("token") String token) {
         log.info("verify called");
 
         emailService.verifyWithToken(token);
@@ -33,9 +33,9 @@ public class EmailController {
     }
 
     @PostMapping("/send-verification-link")
-    public ResponseEntity<?> sendVerificationToken(@RequestBody @EmailValidation String email,
+    public ResponseEntity<Void> sendVerificationToken(@RequestBody @EmailValidation String email,
                                                    @AuthenticationPrincipal UserContext userContext) {
-        log.info("sendVerificationToken called for user with id " + userContext.id());
+        log.info("sendVerificationToken called for user with id {}", userContext.id());
 
         emailService.sendVerificationToken(userContext, email);
 

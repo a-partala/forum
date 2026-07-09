@@ -52,7 +52,7 @@ public class UserService {
         return repository.getReferenceById(id);
     }
 
-    private UserEntity getEntityById(Long id) {
+    public UserEntity getEntityById(Long id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
                 "No user with id " + id));
     }

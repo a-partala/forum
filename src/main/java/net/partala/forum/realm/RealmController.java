@@ -26,7 +26,7 @@ public class RealmController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<RealmResponse> getRealmById(@PathVariable("id") @NotNull @Positive Long id) {
+    public ResponseEntity<RealmResponse> getRealmById(@PathVariable("id") @Positive Long id) {
 
         log.info("getRealmById called with id {}", id);
         var response = realmService.getRealmById(id);
@@ -57,7 +57,7 @@ public class RealmController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RealmResponse> updateRealm(@PathVariable("id") @NotNull @Positive Long id,
+    public ResponseEntity<RealmResponse> updateRealm(@PathVariable("id") @Positive Long id,
                                                      @RequestBody @Valid RealmContentRequest request,
                                                      @AuthenticationPrincipal UserContext userContext) {
         log.info("called updateRealm for {}", request);

@@ -25,7 +25,7 @@ public class CommentController {
     }
 
     @GetMapping("threads/{id}/comments")
-    public ResponseEntity<List<CommentResponse>> getThreadComments(@PathVariable("id") @NotNull @Positive Long threadId,
+    public ResponseEntity<List<CommentResponse>> getThreadComments(@PathVariable("id") @Positive Long threadId,
                                                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                              @RequestParam(value = "pageId", required = false) Integer pageId) {
         log.info("getThreadComments called with thread id {}", threadId);
@@ -35,7 +35,7 @@ public class CommentController {
     }
 
     @GetMapping("comments/{id}/replies")
-    public ResponseEntity<List<CommentResponse>> getCommentReplies(@PathVariable("id") @NotNull @Positive Long commentId,
+    public ResponseEntity<List<CommentResponse>> getCommentReplies(@PathVariable("id") @Positive Long commentId,
                                                                    @RequestParam(value = "pageSize", required = false) Integer pageSize,
                                                                    @RequestParam(value = "pageId", required = false) Integer pageId) {
         log.info("getCommentReplies called with comment id {}", commentId);
@@ -45,7 +45,7 @@ public class CommentController {
     }
 
     @PostMapping("threads/{id}/comments")
-    public ResponseEntity<CommentResponse> commentThread(@PathVariable("id") @NotNull @Positive Long threadId,
+    public ResponseEntity<CommentResponse> commentThread(@PathVariable("id") @Positive Long threadId,
                                                          @RequestBody @Valid CreateCommentRequest request,
                                                        @AuthenticationPrincipal UserContext userContext) {
         log.info("commentThread called with data: {}", request);
@@ -55,7 +55,7 @@ public class CommentController {
     }
 
     @PostMapping("comments/{id}/replies")
-    public ResponseEntity<CommentResponse> replyComment(@PathVariable("id") @NotNull @Positive Long commentId,
+    public ResponseEntity<CommentResponse> replyComment(@PathVariable("id") @Positive Long commentId,
                                                         @RequestBody @Valid CreateCommentRequest request,
                                                        @AuthenticationPrincipal UserContext userContext) {
         log.info("replyComment called with commentId={} and data: {}", commentId, request);

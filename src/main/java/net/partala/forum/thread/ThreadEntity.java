@@ -31,15 +31,20 @@ public class ThreadEntity {
     @JoinColumn(name = "realm_id")
     private RealmEntity realm;
 
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private ThreadStatus status;
+
     @Generated
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
     public ThreadEntity() {}
-    public ThreadEntity(String title, String content, UserEntity creator, RealmEntity realm) {
+    public ThreadEntity(String title, String content, UserEntity creator, RealmEntity realm, ThreadStatus status) {
         this.title = title;
         this.content = content;
         this.creator = creator;
         this.realm = realm;
+        this.status = status;
     }
 }
