@@ -5,15 +5,11 @@ import net.partala.forum.user.UserContext;
 
 final class RealmActor extends Actor {
 
-    private final int maxRealmDepth;
-
-    RealmActor(UserContext userContext,
-               int maxRealmDepth) {
+    RealmActor(UserContext userContext) {
         super(userContext);
-        this.maxRealmDepth = maxRealmDepth;
     }
 
-    AbilityResponse canCreateInBranch(BranchData branch) {
+    AbilityResponse canCreateInBranch(BranchData branch, int maxRealmDepth) {
 
         if(!isActive()) {
             return INACTIVE_ACCOUNT_RESPONSE;

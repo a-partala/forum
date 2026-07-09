@@ -7,8 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 
 import net.partala.forum.common.PageMapper;
-import net.partala.forum.realm.dto.CreateRealmRequest;
-import net.partala.forum.realm.dto.RealmResponse;
+import net.partala.forum.realm.dto.*;
 import net.partala.forum.user.UserContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +51,19 @@ public class RealmController {
         log.info("called createRealm for {}", request);
 
         var response = realmService.createRealm(
+                request,
+                userContext);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RealmResponse> updateRealm(@PathVariable("id") @NotNull @Positive Long id,
+                                                     @RequestBody @Valid RealmContentRequest request,
+                                                     @AuthenticationPrincipal UserContext userContext) {
+        log.info("called updateRealm for {}", request);
+
+        var response = realmService.updateRealm(
+                id,
                 request,
                 userContext);
         return ResponseEntity.status(HttpStatus.OK).body(response);

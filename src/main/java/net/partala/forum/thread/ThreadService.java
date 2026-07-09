@@ -2,8 +2,6 @@ package net.partala.forum.thread;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import net.partala.forum.comment.CommentActor;
-import net.partala.forum.common.AbilityResponse;
 import net.partala.forum.realm.RealmService;
 import net.partala.forum.thread.dto.CreateThreadRequest;
 import net.partala.forum.thread.dto.ThreadResponse;
@@ -46,10 +44,8 @@ public class ThreadService {
                                        UserContext userContext) {
 
         var actor = new ThreadActor(userContext);
-        AbilityResponse canCreate = actor.canCreate();
-        if(!canCreate.result) {
-            throw new IllegalStateException(canCreate.reason);
-        }
+        actor.canCreate()
+                .throwIfCannot();
 
         var creator = userService.getReferenceById(userContext.id());
         var realm = realmService.getReferenceById(request.realmId());

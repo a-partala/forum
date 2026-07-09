@@ -57,10 +57,8 @@ public class CommentService {
                                           UserContext userContext) {
 
         var actor = new CommentActor(userContext);
-        AbilityResponse canCreate = actor.canCreate();
-        if(!canCreate.result) {
-            throw new IllegalStateException(canCreate.reason);
-        }
+        actor.canCreate()
+                .throwIfCannot();
 
         var creator = userService.getReferenceById(userContext.id());
         var commentEntity = new CommentEntity(request.content(), creator, threadId, parentId);

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.common.AbilityResponse;
 import net.partala.forum.exception.AlreadyExistsException;
 import net.partala.forum.realm.dto.CreateRealmRequest;
+import net.partala.forum.realm.dto.RealmContentRequest;
 import net.partala.forum.realm.dto.RealmResponse;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.config.RealmProperties;
@@ -30,13 +31,17 @@ public class RealmService {
     }
 
     public RealmResponse getRealmById(Long id) {
-        var entity = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
-                "No realm with id " + id));
-        return RealmResponse.of(entity);
+        return RealmResponse.of(getEntityById(id));
     }
 
     public RealmEntity getReferenceById(Long id) {
         return repository.getReferenceById(id);
+    }
+
+    private RealmEntity getEntityById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                "No realm with id " + id)
+        );
     }
 
     List<RealmResponse> searchByFilter(Long parentRealmId, Pageable pageable) {
@@ -57,10 +62,8 @@ public class RealmService {
             throw new AlreadyExistsException("Realm with this name already exists");
         }
 
-        AbilityResponse canCreate = canCreateRealmInRealm(request.parentId(), userContext);
-        if(!canCreate.result) {
-            throw new IllegalStateException(canCreate.reason);
-        }
+        canCreateRealmInParent(request.parentId(), userContext)
+                .throwIfCannot();
 
         var realm = new RealmEntity(
                 request.name(),
@@ -76,12 +79,32 @@ public class RealmService {
         return response;
     }
 
-    AbilityResponse canCreateRealmInRealm(Long parentRealmId,
-                                          UserContext userContext) {
+    @Transactional
+    RealmResponse updateRealm(Long id, RealmContentRequest request, UserContext userContext) {
 
-        var actor = new RealmActor(
-                userContext,
-                properties.maxDepth());
-        return actor.canCreateInBranch(BranchData.of(parentRealmId, repository::findById));
+        var realm = getEntityById(id);
+        var actor = new RealmActor(userContext);
+        var branchData = getBranchData(id);
+
+        actor.canEdit(branchData)
+                .throwIfCannot();
+
+        realm.setName(request.name());
+        realm.setDescription(request.description());
+        return RealmResponse.of(
+                repository.save(realm)
+        );
+    }
+
+    AbilityResponse canCreateRealmInParent(Long parentRealmId,
+                                           UserContext userContext) {
+
+        var actor = new RealmActor(userContext);
+        var branch = getBranchData(parentRealmId);
+        return actor.canCreateInBranch(branch, properties.maxDepth());
+    }
+
+    private BranchData getBranchData(Long originId) {
+        return BranchData.of(originId, repository::findById);
     }
 }
