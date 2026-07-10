@@ -80,6 +80,7 @@ public class UserService {
         }
 
         var user = getEntityById(id);
+
         user.setEmail(email);
         user.setStatus(AccountStatus.ACTIVE);
         repository.save(user);

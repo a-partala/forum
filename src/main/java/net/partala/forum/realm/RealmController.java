@@ -1,7 +1,6 @@
 package net.partala.forum.realm;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
@@ -35,13 +34,13 @@ public class RealmController {
 
     @GetMapping
     public ResponseEntity<List<RealmResponse>> searchByParent(
-            @RequestParam(value = "parentRealmId", required = false) Long parentRealmId,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize,
-            @RequestParam(value = "pageId", required = false) Integer pageId
+            @RequestParam(value = "parentRealmId", required = false) @Positive Long parentRealmId,
+            @RequestParam(value = "pageSize", required = false) @Positive Integer pageSize,
+            @RequestParam(value = "pageId", required = false) @Positive Integer pageId
     ) {
         log.info("called search by filter");
 
-        var result = realmService.searchByFilter(parentRealmId, PageMapper.pageableOf(pageSize, pageId));
+        var result = realmService.searchByFilter(parentRealmId, PageMapper.pageableOf(pageId, pageSize));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -58,7 +57,7 @@ public class RealmController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RealmResponse> updateRealm(@PathVariable("id") @Positive Long id,
-                                                     @RequestBody @Valid RealmContentRequest request,
+                                                     @RequestBody @Valid UpdateRealmRequest request,
                                                      @AuthenticationPrincipal UserContext userContext) {
         log.info("called updateRealm for {}", request);
 

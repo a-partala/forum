@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -31,4 +32,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
             WHERE c.parentId IN :commentIds
             """)
     Set<Long> selectReplied(List<Long> commentIds);
+
+    Optional<CommentEntity> findByIdAndDeletedFalse(Long id);
 }

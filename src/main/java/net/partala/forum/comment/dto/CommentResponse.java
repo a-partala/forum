@@ -9,7 +9,9 @@ public record CommentResponse(
         UserResponse creatorId,
         Long threadId,
         Long parentId,
-        boolean hasReplies
+        boolean hasReplies,
+        boolean deleted,
+        boolean edited
 ) {
 
     public static CommentResponse of(CommentEntity entity, boolean hasReplies) {
@@ -19,7 +21,9 @@ public record CommentResponse(
                 UserResponse.of(entity.getCreator()),
                 entity.getThreadId(),
                 entity.getParentId(),
-                hasReplies);
+                hasReplies,
+                entity.isDeleted(),
+                entity.isEdited());
     }
 
     public static CommentResponse of(CommentEntity entity) {

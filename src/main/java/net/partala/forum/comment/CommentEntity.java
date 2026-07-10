@@ -29,6 +29,12 @@ public class CommentEntity {
     @Column(name = "parent_id")
     private Long parentId;
 
+    @Setter
+    private boolean deleted;
+
+    @Setter
+    private boolean edited;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 

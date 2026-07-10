@@ -31,6 +31,7 @@ public class ThreadEntity {
     @JoinColumn(name = "realm_id")
     private RealmEntity realm;
 
+    //TODO: Add status_actor_id or status_changed_by to the table
     @Setter
     @Enumerated(EnumType.STRING)
     private ThreadStatus status;

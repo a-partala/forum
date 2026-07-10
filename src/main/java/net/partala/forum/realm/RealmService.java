@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.partala.forum.common.AbilityResponse;
 import net.partala.forum.exception.AlreadyExistsException;
 import net.partala.forum.realm.dto.CreateRealmRequest;
-import net.partala.forum.realm.dto.RealmContentRequest;
+import net.partala.forum.realm.dto.UpdateRealmRequest;
 import net.partala.forum.realm.dto.RealmResponse;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.config.RealmProperties;
@@ -80,7 +80,7 @@ public class RealmService {
     }
 
     @Transactional
-    RealmResponse updateRealm(Long id, RealmContentRequest request, UserContext userContext) {
+    RealmResponse updateRealm(Long id, UpdateRealmRequest request, UserContext userContext) {
 
         var realm = getEntityById(id);
 

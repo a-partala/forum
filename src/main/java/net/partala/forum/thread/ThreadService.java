@@ -7,6 +7,7 @@ import net.partala.forum.realm.RealmService;
 import net.partala.forum.thread.dto.CreateThreadRequest;
 import net.partala.forum.thread.dto.ThreadResponse;
 import net.partala.forum.thread.dto.UpdateThreadRequest;
+import net.partala.forum.user.AccountStatus;
 import net.partala.forum.user.UserContext;
 import net.partala.forum.user.UserService;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class ThreadService {
     }
 
     private ThreadEntity getEntityById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(
+        return repository.findByIdAndStatusNot(id, AccountStatus.DELETED).orElseThrow(() -> new EntityNotFoundException(
                 "No thread with id " + id));
     }
 
@@ -102,6 +103,7 @@ public class ThreadService {
                                        UserContext userContext) {
 
         var thread = getEntityById(id);
+
         var branch = getBranchDetails(thread);
         var actor = new ThreadActor(userContext);
 
@@ -110,6 +112,10 @@ public class ThreadService {
 
         thread.setStatus(ThreadStatus.CLOSED);
         return ThreadResponse.of(repository.save(thread));
+    }
+
+    public BranchDetails getBranchDetails(Long threadId) {
+        return getBranchDetails(getEntityById(threadId));
     }
 
     private BranchDetails getBranchDetails(ThreadEntity thread) {

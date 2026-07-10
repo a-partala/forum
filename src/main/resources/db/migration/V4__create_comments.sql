@@ -1,6 +1,6 @@
 CREATE TABLE comments (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    content VARCHAR(200) NOT NULL,
+    content VARCHAR(1000) NOT NULL,
     creator_id BIGINT NOT NULL,
     thread_id BIGINT NOT NULL,
     parent_id BIGINT,
