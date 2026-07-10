@@ -44,11 +44,11 @@ public final class ThreadActor extends Actor {
             return AbilityResponse.can();
         }
 
-        var creatorId = entity.getCreator().getId();
-        if(branch.ancestorOwners().contains(creatorId)) {
+        if(branch.containsOwner(id)) {
            return AbilityResponse.can();
         }
 
+        var creatorId = entity.getCreator().getId();
         if(!id.equals(creatorId)) {
             return AbilityResponse.cannot("You can only delete your threads or threads in your realm");
         }
@@ -65,11 +65,11 @@ public final class ThreadActor extends Actor {
             return AbilityResponse.can();
         }
 
-        var creatorId = entity.getCreator().getId();
-        if(branch.ancestorOwners().contains(creatorId)) {
+        if(branch.containsOwner(id)) {
             return AbilityResponse.can();
         }
 
+        var creatorId = entity.getCreator().getId();
         if(!id.equals(creatorId)) {
             return AbilityResponse.cannot("You can only close your threads or threads in your realm");
         }

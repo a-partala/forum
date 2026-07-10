@@ -44,7 +44,7 @@ final class RealmActor extends Actor {
             return AbilityResponse.can();
         }
 
-        if(!branch.ancestorOwners().contains(id)) {
+        if(!branch.containsOwner(id)) {
             return AbilityResponse.cannot("Don't have access to this scope");
         }
 

@@ -38,4 +38,8 @@ public record BranchDetails(
 
         return new BranchDetails(originId, seenRealms.size(), owners);
     }
+
+    public boolean containsOwner(Long id) {
+        return ancestorOwners.contains(id);
+    }
 }
