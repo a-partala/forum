@@ -6,7 +6,7 @@ import net.partala.forum.thread.ThreadEntity;
 import net.partala.forum.user.Actor;
 import net.partala.forum.user.UserContext;
 
-public final class CommentActor extends Actor {
+final class CommentActor extends Actor {
 
     public CommentActor(UserContext userContext) {
         super(userContext);

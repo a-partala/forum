@@ -34,4 +34,10 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     Set<Long> selectReplied(List<Long> commentIds);
 
     Optional<CommentEntity> findByIdAndDeletedFalse(Long id);
+
+    @Query("""
+            SELECT c.creator.id FROM CommentEntity c
+            WHERE c.id = :commentId
+            """)
+    Long getCreatorId(Long commentId);
 }

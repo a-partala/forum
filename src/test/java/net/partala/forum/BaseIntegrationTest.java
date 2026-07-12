@@ -7,12 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 
-/**
- * Uncompleted, will be changed in future IntegrationTest classes.
- * [Brings up test database and cleans it before each test]
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestcontainersConfig.class)
@@ -22,7 +19,10 @@ public class BaseIntegrationTest {
     protected MockMvc mockMvc;
     @Autowired
     private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
+    //all tables must have entity classes.
     @BeforeEach
     protected void truncateMappedObjects() {
         entityManagerFactory

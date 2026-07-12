@@ -2,16 +2,16 @@ package net.partala.forum.common;
 
 public final class AbilityResponse {
     private static final AbilityResponse CAN = new AbilityResponse(true, "");
-    public final boolean result;
+    public final boolean isAble;
     public final String reason;
 
-    private AbilityResponse(boolean result, String reason) {
-        this.result = result;
+    private AbilityResponse(boolean isAble, String reason) {
+        this.isAble = isAble;
         this.reason = reason;
     }
 
     public void throwIfCannot() {
-        if(!result) {
+        if(!isAble) {
             throw new IllegalStateException(reason);
         }
     }

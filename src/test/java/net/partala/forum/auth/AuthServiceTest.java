@@ -24,11 +24,11 @@ import static org.mockito.Mockito.when;
 class AuthServiceTest {
 
     @Mock
-    private EmailService emailService;
-    @Mock
     private UserService userService;
     @Mock
     private PasswordEncoder encoder;
+    @Mock
+    private EmailService emailService;
 
     @InjectMocks
     private AuthService authService;

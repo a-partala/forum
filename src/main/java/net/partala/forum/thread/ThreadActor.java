@@ -5,7 +5,7 @@ import net.partala.forum.realm.BranchDetails;
 import net.partala.forum.user.Actor;
 import net.partala.forum.user.UserContext;
 
-public final class ThreadActor extends Actor {
+final class ThreadActor extends Actor {
 
     public ThreadActor(UserContext userContext) {
         super(userContext);
